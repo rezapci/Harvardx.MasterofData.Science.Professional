@@ -1,0 +1,829 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[left=2.5cm, right=2cm, top=2.5cm, bottom=2cm]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Capstone Project - Heart Disease UCI},
+            pdfauthor={Reza Hashemi},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Capstone Project - Heart Disease UCI}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \subtitle{Prediction System}
+  \author{Reza Hashemi}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{August 12, 2019}
+
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\usepackage{float}
+\definecolor{my.clear.black}{RGB}{86, 101, 115}
+\definecolor{my.clear.gray}{RGB}{214, 219, 223}
+\definecolor{my.dark.gray}{RGB}{52, 73, 94}
+\definecolor{my.dark.green}{RGB}{14, 98, 81}
+\definecolor{my.dark.yellow}{RGB}{154, 125, 10  }
+\definecolor{my.orange}{RGB}{186, 74, 0}
+\definecolor{my.red}{RGB}{169, 50, 38}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+This report is part of the final project capstone to obtain the
+`Professional Certificate in Master of Data Science' emited by Harvard
+University (HarvadX), platform for education and learning. The main
+objective is to create a recommendation system using the Heart Disease
+UCI dataset, and it must be done training a machine learning algorithm
+using the inputs in one subset to predict in the validation set.
+\end{abstract}
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\pagebreak
+
+\hypertarget{executive-summary}{%
+\section{Executive Summary}\label{executive-summary}}
+
+The main purpose of this project is to develop a machine learning
+algorithm to predict wheter patients have a heart disease or not. The
+entire dataframe can be found at
+\href{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}{here}.
+
+The dataset contains 14 variables: 13 are independent - 8 categorical \&
+5 continuous variables 1 binary called \texttt{target}.
+
+The procedure was:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{\textcolor{my.dark.gray}{Exploratory Analysis}}: through data
+  and graphics, evaluate all patients who have a heart disease and those
+  who do not, with each of the independent variables.\\
+\item
+  \textbf{\textcolor{my.dark.gray}{Split Data Set}}: Split the data set
+  into \textcolor{red}{train} and \textcolor{red}{test} sets, to create
+  and evaluate the model.
+\end{enumerate}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+The present report covers the
+\href{https://archive.ics.uci.edu/ml/datasets/Heart+Disease}{Heart
+Attack UCI dataset}, with aknowledgements to:
+
+Creators: 1. Hungarian Institute of Cardiology. Budapest: Andras Janosi,
+M.D.~ 2. University Hospital, Zurich, Switzerland: William Steinbrunn,
+M.D.~ 3. University Hospital, Basel, Switzerland: Matthias Pfisterer,
+M.D.~ 4. V.A. Medical Center, Long Beach and Cleveland Clinic
+Foundation: Robert Detrano, M.D., Ph.D.
+
+Donor: David W. Aha (aha `@' ics.uci.edu) (714) 856-8779
+
+The main objective for using this dataset is to build several machine
+learning classification models that predicts the presence of heart
+disease in a patient. About 165 deaths per 100.000 individuals in 2007
+die of heart disease in the United States every year - that's 1 in every
+4 deaths, it is the leading cause of death in US. Heart disease is the
+leading cause of death for both, mean and women. More than half of the
+deaths due to heart disease in 2009 were in men. More information can be
+found at
+\href{https://healthmetrics.heart.org/wp-content/uploads/2019/02/At-A-Glance-Heart-Disease-and-Stroke-Statistics-\%E2\%80\%93-2019.pdf}{Heart
+Disease and Stroke Statistics-2019}
+
+\textbf{\textcolor{my.dark.yellow}{ The machine learning models used in this report aims to create a classifier that provides a high accuracy level combined with a los rate of false-negatives (high sensitivity) }}.
+
+\textcolor{my.dark.green}{"This database contains 76 attributes, but all published experiments refer to using a subset of 14 of them.  In  particular, the Cleveland database is the only one that has been used by ML researches to this date.  The 'goal' field refers to the presence of heart disease in the patient.  It is integer value from 0 (no presence) to 4".}\\
+\textcolor{my.dark.green}{
+[kaggle.com](https://www.kaggle.com/ronitf/heart-disease-uci)
+}
+
+The dataset contains 14 variables and 303 observations.
+
+\pagebreak
+
+\hypertarget{data-analysis}{%
+\section{Data Analysis}\label{data-analysis}}
+
+\hypertarget{selected-data}{%
+\subsection{Selected Data}\label{selected-data}}
+
+This dataset contains different attributes:
+
+\textbf{\textcolor{my.dark.gray}{Independent Variables}}\\
+- \textcolor{my.orange}{Categorical}
+\textbf{\textcolor{my.dark.gray}{(8)}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:table.categorical.attributes}Attributes And Definitions}
+\centering
+\begin{tabular}{ll}
+\toprule
+Attribute & Definition\\
+\midrule
+\rowcolor{gray!6}  ca & number of major vessels (0-3) colored by flourosopy\\
+cp & pain type (0 - 3)\\
+\rowcolor{gray!6}  exang & exercise induced angina (1 = yes; 0 = no)\\
+fbs & fbs(fasting blood sugar > 120 mg/dl) (1 = true; 0 = false)\\
+\rowcolor{gray!6}  restecg & resting electrocardiographic results\\
+\addlinespace
+sex & sex(1 = male; 0 = female)\\
+\rowcolor{gray!6}  slope & the slope of the peak exercise ST segment\\
+thal & thal3 = normal; 6 = fixed defect; 7 = reversable defect\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+\tightlist
+\item
+  \textcolor{my.orange}{Continuos}
+  \textbf{\textcolor{my.dark.gray}{(5)}}
+\end{itemize}
+
+\begin{table}[!h]
+
+\caption{\label{tab:table.continuous.attributes}Attributes And Definitions}
+\centering
+\begin{tabular}{ll}
+\toprule
+Attribute & Definition\\
+\midrule
+\rowcolor{gray!6}  age & age in years\\
+chol & cholserum cholestoral in mg/dl\\
+\rowcolor{gray!6}  oldpeak & oldpeakST depression induced by exercise relative to rest\\
+testbps & resting blood pressure (in mm/Hg on admission to the hospital)\\
+\rowcolor{gray!6}  thalach & maximum heart rate achieved\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{\textcolor{my.dark.gray}{Binary Attribute}}\\
+- \textcolor{my.orange}{Binary Attribute}
+\textbf{\textcolor{my.dark.gray}{(1)}}
+
+\begin{table}[!h]
+
+\caption{\label{tab:table.binary.attribute}Attributes And Definitions}
+\centering
+\begin{tabular}{ll}
+\toprule
+Attribute & Definition\\
+\midrule
+\rowcolor{gray!6}  target & target 1 or 0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The \texttt{target} variable represents the target feature with levels
+\texttt{1} or \texttt{0}, and its proportions are shown below:
+
+\begin{verbatim}
+## 
+##    0    1 
+## 0.46 0.54
+\end{verbatim}
+
+Each attribute has been converted to \texttt{factor}:
+
+\begin{verbatim}
+## [1] 303  14
+\end{verbatim}
+
+\begin{verbatim}
+##   ï..age      sex       cp trestbps     chol      fbs  restecg  thalach 
+## "factor" "factor" "factor" "factor" "factor" "factor" "factor" "factor" 
+##    exang  oldpeak    slope       ca     thal   target 
+## "factor" "factor" "factor" "factor" "factor" "factor"
+\end{verbatim}
+
+Let's see the \textbf{\textcolor{my.red}{10 first observations}} in data
+set:
+
+\begin{verbatim}
+##    ï..age sex cp trestbps chol fbs restecg thalach exang oldpeak slope ca
+## 1      63   1  3      145  233   1       0     150     0     2.3     0  0
+## 2      37   1  2      130  250   0       1     187     0     3.5     0  0
+## 3      41   0  1      130  204   0       0     172     0     1.4     2  0
+## 4      56   1  1      120  236   0       1     178     0     0.8     2  0
+## 5      57   0  0      120  354   0       1     163     1     0.6     2  0
+## 6      57   1  0      140  192   0       1     148     0     0.4     1  0
+## 7      56   0  1      140  294   0       0     153     0     1.3     1  0
+## 8      44   1  1      120  263   0       1     173     0       0     2  0
+## 9      52   1  2      172  199   1       1     162     0     0.5     2  0
+## 10     57   1  2      150  168   0       1     174     0     1.6     2  0
+##    thal target
+## 1     1      1
+## 2     2      1
+## 3     2      1
+## 4     2      1
+## 5     2      1
+## 6     1      1
+## 7     2      1
+## 8     3      1
+## 9     3      1
+## 10    2      1
+\end{verbatim}
+
+A \textbf{\textcolor{my.red}{summary}} of dataset:
+
+\begin{verbatim}
+##      ï..age    sex     cp         trestbps        chol     fbs     restecg
+##  58     : 19   0: 96   0:143   120    : 37   197    :  6   0:258   0:147  
+##  57     : 17   1:207   1: 50   130    : 36   204    :  6   1: 45   1:152  
+##  54     : 16           2: 87   140    : 32   234    :  6           2:  4  
+##  59     : 14           3: 23   110    : 19   212    :  5                  
+##  52     : 13                   150    : 17   254    :  5                  
+##  51     : 12                   138    : 13   269    :  5                  
+##  (Other):212                   (Other):149   (Other):270                  
+##     thalach    exang      oldpeak    slope   ca      thal    target 
+##  162    : 11   0:204   0      : 99   0: 21   0:175   0:  2   0:138  
+##  160    :  9   1: 99   1.2    : 17   1:140   1: 65   1: 18   1:165  
+##  163    :  9           0.6    : 14   2:142   2: 38   2:166          
+##  152    :  8           1      : 14           3: 20   3:117          
+##  173    :  8           0.8    : 13           4:  5                  
+##  125    :  7           1.4    : 13                                  
+##  (Other):251           (Other):133
+\end{verbatim}
+
+The \textbf{\textcolor{my.red}{structure}} of dataset:
+
+\begin{verbatim}
+## 'data.frame':    303 obs. of  14 variables:
+##  $ ï..age  : Factor w/ 41 levels "29","34","35",..: 30 4 8 23 24 24 23 11 19 24 ...
+##  $ sex     : Factor w/ 2 levels "0","1": 2 2 1 2 1 2 1 2 2 2 ...
+##  $ cp      : Factor w/ 4 levels "0","1","2","3": 4 3 2 2 1 1 2 2 3 3 ...
+##  $ trestbps: Factor w/ 49 levels "94","100","101",..: 32 23 23 15 15 29 29 15 44 35 ...
+##  $ chol    : Factor w/ 152 levels "126","131","141",..: 65 81 36 68 146 26 117 93 32 10 ...
+##  $ fbs     : Factor w/ 2 levels "0","1": 2 1 1 1 1 1 1 1 2 1 ...
+##  $ restecg : Factor w/ 3 levels "0","1","2": 1 2 1 2 2 2 1 2 2 2 ...
+##  $ thalach : Factor w/ 91 levels "71","88","90",..: 50 85 72 77 63 48 53 73 62 74 ...
+##  $ exang   : Factor w/ 2 levels "0","1": 1 1 1 1 2 1 1 1 1 1 ...
+##  $ oldpeak : Factor w/ 40 levels "0","0.1","0.2",..: 23 33 15 9 7 5 14 1 6 17 ...
+##  $ slope   : Factor w/ 3 levels "0","1","2": 1 1 3 3 3 2 2 3 3 3 ...
+##  $ ca      : Factor w/ 5 levels "0","1","2","3",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ thal    : Factor w/ 4 levels "0","1","2","3": 2 3 3 3 3 2 3 4 4 3 ...
+##  $ target  : Factor w/ 2 levels "0","1": 2 2 2 2 2 2 2 2 2 2 ...
+\end{verbatim}
+
+\hypertarget{distribution-of-the-target-attribute}{%
+\subsection{\texorpdfstring{Distribution of the \texttt{target}
+Attribute}{Distribution of the target Attribute}}\label{distribution-of-the-target-attribute}}
+
+The \texttt{target} variable represents the target feature with levels
+\texttt{1} and \texttt{0}. Its proportions are shown below:
+
+\begin{table}[!h]
+
+\caption{\label{tab:target.distribution}Target Variable Distribution}
+\centering
+\begin{tabular}{ll}
+\toprule
+Var1 & Freq\\
+\midrule
+\rowcolor{gray!6}  0 & 46\%\\
+1 & 54\%\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A graph that shows the previous proportions is:
+
+\begin{center}\includegraphics{img/target.distribution.graph-1} \end{center}
+
+\hypertarget{exploring-the-variables-correlation}{%
+\subsection{Exploring the Variable's
+Correlation}\label{exploring-the-variables-correlation}}
+
+Most machine learning algorithms assume that the predictor variables are
+independent from each others. This is the reason why the multiolinearity
+will be removed to achieve a more robust analysis.
+
+\textbf{Variables' Correlation Plot}
+
+\begin{center}\includegraphics{img/data.set.variables.correlation-1} \end{center}
+
+The plot shows that none variables have a high correlation with any
+other, all correlations are less than 0.8.
+
+\hypertarget{data-transformation}{%
+\section{Data Transformation}\label{data-transformation}}
+
+We will remove highly correlated predictors, based on whose correlation
+is above 0.9. For this purpose, we will use the
+\texttt{findcorrelation()} function, from caret package, which employs a
+heuristic algorithm to determine which variable should be removed
+instead of selecting bindly.
+
+\begin{verbatim}
+## [1] 14
+\end{verbatim}
+
+\hypertarget{data-pre-processing}{%
+\section{Data Pre-Processing}\label{data-pre-processing}}
+
+\hypertarget{principle-component-analysis-pca}{%
+\subsection{Principle Component Analysis
+(PCA)}\label{principle-component-analysis-pca}}
+
+The \texttt{target} variable is removed followd by scaling and centering
+these variables.
+
+\begin{verbatim}
+## Importance of components:
+##                           PC1    PC2     PC3     PC4     PC5     PC6
+## Standard deviation     1.6622 1.2396 1.10582 1.08681 1.01092 0.98489
+## Proportion of Variance 0.2125 0.1182 0.09406 0.09086 0.07861 0.07462
+## Cumulative Proportion  0.2125 0.3307 0.42481 0.51567 0.59428 0.66890
+##                            PC7     PC8    PC9    PC10    PC11    PC12
+## Standard deviation     0.92885 0.88088 0.8479 0.78840 0.72808 0.65049
+## Proportion of Variance 0.06637 0.05969 0.0553 0.04781 0.04078 0.03255
+## Cumulative Proportion  0.73527 0.79495 0.8503 0.89807 0.93885 0.97140
+##                          PC13
+## Standard deviation     0.6098
+## Proportion of Variance 0.0286
+## Cumulative Proportion  1.0000
+\end{verbatim}
+
+A plot of the compute proportion of variance is:
+
+\begin{center}\includegraphics{img/graphic.proporiton.variance-1} \end{center}
+
+The above plot shows that 95\% of the variance is explained with all
+PC's, working with the original dataset.
+
+\hypertarget{pca-applied-to-the-transformed-dataset}{%
+\subsection{PCA Applied to the Transformed
+Dataset}\label{pca-applied-to-the-transformed-dataset}}
+
+\begin{verbatim}
+## Importance of components:
+##                           PC1    PC2    PC3     PC4    PC5    PC6     PC7
+## Standard deviation     1.8170 1.2539 1.1100 1.09847 1.0110 0.9850 0.92910
+## Proportion of Variance 0.2358 0.1123 0.0880 0.08619 0.0730 0.0693 0.06166
+## Cumulative Proportion  0.2358 0.3481 0.4361 0.52231 0.5953 0.6646 0.72627
+##                            PC8     PC9    PC10    PC11    PC12    PC13
+## Standard deviation     0.88096 0.85393 0.78913 0.73103 0.65577 0.60982
+## Proportion of Variance 0.05544 0.05209 0.04448 0.03817 0.03072 0.02656
+## Cumulative Proportion  0.78170 0.83379 0.87827 0.91644 0.94716 0.97372
+##                           PC14
+## Standard deviation     0.60658
+## Proportion of Variance 0.02628
+## Cumulative Proportion  1.00000
+\end{verbatim}
+
+A plot of the compute the proportion of variance explained is:
+
+\begin{center}\includegraphics{img/graphic.proportion.variance2-1} \end{center}
+
+The above plot doesn't show any variation in comparisson with the
+previous plot of proportion of variance.
+
+\hypertarget{linear-discriminant-analysis-lda}{%
+\subsection{Linear Discriminant Analysis
+(LDA)}\label{linear-discriminant-analysis-lda}}
+
+Now we will use the LDA instead of PCA, since it takes into
+consideration the different classes \& could provide better results.
+
+\begin{verbatim}
+## Call:
+## lda(target ~ ., data = hd.set.numeric, center = TRUE, scale = TRUE)
+## 
+## Prior probabilities of groups:
+##         0         1 
+## 0.4554455 0.5445545 
+## 
+## Group means:
+##     ï..age       sex        cp trestbps     chol       fbs   restecg
+## 0 56.60145 0.8260870 0.4782609 134.3986 251.0870 0.1594203 0.4492754
+## 1 52.49697 0.5636364 1.3757576 129.3030 242.2303 0.1393939 0.5939394
+##    thalach     exang   oldpeak    slope        ca     thal
+## 0 139.1014 0.5507246 1.5855072 1.166667 1.1666667 2.543478
+## 1 158.4667 0.1393939 0.5830303 1.593939 0.3636364 2.121212
+## 
+## Coefficients of linear discriminants:
+##                   LD1
+## ï..age   -0.003285901
+## sex      -0.784995108
+## cp        0.451396013
+## trestbps -0.007974151
+## chol     -0.001415982
+## fbs       0.069584331
+## restecg   0.199649424
+## thalach   0.012092920
+## exang    -0.576928147
+## oldpeak  -0.235458579
+## slope     0.316323381
+## ca       -0.402928538
+## thal     -0.476771859
+\end{verbatim}
+
+\hypertarget{data-analysis-between-independent-attributes-target-attribute}{%
+\subsection{\texorpdfstring{Data Analysis Between \texttt{Independent}
+Attributes \& \texttt{target}
+Attribute}{Data Analysis Between Independent Attributes \& target Attribute}}\label{data-analysis-between-independent-attributes-target-attribute}}
+
+A \protect\hyperlink{barplots}{Bivariate Analysis} has been done,
+between each \texttt{independent} attribute and \texttt{target}, all
+these plots can be found at the end of this document.
+
+\hypertarget{data-partition}{%
+\section{Data Partition}\label{data-partition}}
+
+Two sets (training \& test) have been created from main dataset.
+
+A partition has been done, into \texttt{training}(80\%) \&
+\texttt{test}(20\%) datasets:
+
+\begin{table}[!h]
+
+\caption{\label{tab:table.data.set.partition}Attributes And Definitions}
+\centering
+\begin{tabular}{lr}
+\toprule
+Dataset & Observations\\
+\midrule
+\rowcolor{gray!6}  training & 242\\
+test & 61\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\pagebreak
+
+\hypertarget{model-creation}{%
+\section{Model Creation}\label{model-creation}}
+
+\hypertarget{logistic-regression-model}{%
+\subsection{Logistic Regression Model}\label{logistic-regression-model}}
+
+The \texttt{Regresion\ Model} is very useful in this analysis because
+this is a binary classification problem.\\
+Then, in order to make a suitable selection of the variables, the
+\texttt{Stepwise\ Backward\ \&\ Forward} elimination method was used, as
+well as the \texttt{AIC(Akaike\ Information\ Criteria)} for selection
+criteria, and, \texttt{p-values} has been used to detect the least
+significant variables.
+
+\texttt{stepAIC()} function has been used to choose the best model by
+\texttt{AIC}. It has an option named direction, which can take the
+following values: i) ``both'' (for stepwise regression, both forward and
+backward selection); ``backward'' (for backward selection) and
+``forward'' (for forward selection). It return the best final model.
+And, for out model we used the \texttt{both} option:
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = target ~ exang + ca + thal + slope + cp + sex, 
+##     family = binomial(link = "logit"), data = train.set)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.7607  -0.3563   0.1138   0.4380   1.8944  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  -0.1393     3.8920  -0.036 0.971447    
+## exang1       -1.2500     0.4773  -2.619 0.008821 ** 
+## ca1          -2.1520     0.5360  -4.015 5.95e-05 ***
+## ca2          -3.6537     0.8360  -4.371 1.24e-05 ***
+## ca3          -1.9976     0.9246  -2.160 0.030735 *  
+## ca4           1.5660     1.7574   0.891 0.372866    
+## thal1         2.2362     3.8765   0.577 0.564030    
+## thal2         1.8122     3.7964   0.477 0.633120    
+## thal3         0.4881     3.8001   0.128 0.897804    
+## slope1       -0.5870     0.8276  -0.709 0.478178    
+## slope2        1.4925     0.8753   1.705 0.088192 .  
+## cp1           1.2461     0.6426   1.939 0.052472 .  
+## cp2           1.9218     0.5426   3.542 0.000397 ***
+## cp3           1.8205     0.7151   2.546 0.010898 *  
+## sex1         -1.2987     0.5506  -2.359 0.018329 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 333.48  on 241  degrees of freedom
+## Residual deviance: 157.94  on 227  degrees of freedom
+## AIC: 187.94
+## 
+## Number of Fisher Scoring iterations: 6
+\end{verbatim}
+
+\hypertarget{prediction}{%
+\subsubsection{Prediction}\label{prediction}}
+
+We use the \texttt{Regression\ Model} to make predictions on the test
+set. If we consider all the possible threshold values and the
+corresponding specificity and sensitivity rate what will be the final
+model accuracy. ROC(Receiver operating characteristic) curve is drawn by
+taking False positive rate on X-axis and True positive rate on Y- axis
+ROC tells us, how many mistakes are we making to identify all the
+positives?
+
+\begin{center}\includegraphics{img/prediction.regresion.model-1} \end{center}
+
+\begin{verbatim}
+## NULL
+\end{verbatim}
+
+The AUC (Area Under the Curve) has been calculated to measure
+performance, and its value is: 0.9475108.
+
+\hypertarget{evaluating-model-performance}{%
+\subsubsection{Evaluating Model
+Performance}\label{evaluating-model-performance}}
+
+A value of \texttt{0.5} has been set as probability threshold. And the
+confusion matrix shows the key performance measures like
+\texttt{sensitivity\ (0.85)} and \texttt{specificity\ (0.87)}.
+
+\begin{verbatim}
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1
+##          0 24  4
+##          1  2 31
+##                                          
+##                Accuracy : 0.9016         
+##                  95% CI : (0.7981, 0.963)
+##     No Information Rate : 0.5738         
+##     P-Value [Acc > NIR] : 2.082e-08      
+##                                          
+##                   Kappa : 0.8009         
+##                                          
+##  Mcnemar's Test P-Value : 0.6831         
+##                                          
+##             Sensitivity : 0.9231         
+##             Specificity : 0.8857         
+##          Pos Pred Value : 0.8571         
+##          Neg Pred Value : 0.9394         
+##              Prevalence : 0.4262         
+##          Detection Rate : 0.3934         
+##    Detection Prevalence : 0.4590         
+##       Balanced Accuracy : 0.9044         
+##                                          
+##        'Positive' Class : 0              
+## 
+\end{verbatim}
+
+\hypertarget{results}{%
+\subsubsection{Results}\label{results}}
+
+\begin{itemize}
+\tightlist
+\item
+  The logistic regression model fit the data very well, tha base model
+  gave an AIC of \texttt{194.95}.\\
+\item
+  We want that curve to be far away from straight line. Ideally we want
+  the area under the curve as high as possible ROC comes with a
+  connected topic, AUC. Area Under the Curve ROC Curve Gives us an idea
+  on the performance of the model under all possible values of
+  threshold. We want to make almost 0\% mistakes while identifying all
+  the positives, which means we want to see AUC value near to 1. The
+  graph that shows the AUC (Area Unde the Curve) is the following:
+\end{itemize}
+
+\begin{center}\includegraphics{img/roc.plot-1} \end{center}
+
+And, the AUC = 0.9475108\\
+- Working with a \texttt{probability\ threshold} = 0.5, the confusion
+matrix showed that \texttt{55} of \texttt{61} instances, in test set,
+were correctly classified.\\
+- The Confusion Matrix shows the key performance measures like
+\texttt{sensitivity\ (0.85)} and \texttt{specificity\ (0.87)}.
+
+\hypertarget{conclusion}{%
+\subsubsection{Conclusion}\label{conclusion}}
+
+The dataset \texttt{Heart\ Disease\ UCI} was obtained from Kaggle. This
+dataset were used to construct a logistic regression based on a
+predictive model, in order to detect if a patient has a heart disease,
+or not.\\
+The proposed model achieved the best performance after using the
+\texttt{stepwise} elimination process, with the option \texttt{both}, to
+perform a two way elimination process \texttt{backward} and
+\texttt{forward}. This process allowed us to identify:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Importance & Variable Name\tabularnewline
+\midrule
+\endhead
+High & ca, cp, sex\tabularnewline
+Low & age, chol, fbs, restecg\tabularnewline
+\bottomrule
+\end{longtable}
+
+The final model results obtained, that describe the performance of the
+classification model, are:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+Variable & Value\tabularnewline
+\midrule
+\endhead
+Accuracy & 0.86\tabularnewline
+Sensitivity & 0.85\tabularnewline
+Specificity & 0.87\tabularnewline
+\bottomrule
+\end{longtable}
+
+\textbf{Accuracy}: How often the classifier is correct
+\textbf{Sensitivity}: True Positive Rate Measures the proportion of
+actual positives that are correctly identified as such
+\textbf{Specificity}: True Negative Rate Measures the proportion of
+actual negatives that are correctly identified
+
+\pagebreak
+
+\hypertarget{barplots}{%
+\section{Barplots - Bivariate Analysis}\label{barplots}}
+
+\hypertarget{target-vs-sex}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{sex}}{target Vs sex}}\label{target-vs-sex}}
+
+\begin{center}\includegraphics{img/barplot.target.sex-1} \end{center}
+
+\hypertarget{target-vs-fbs}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{fbs}}{target Vs fbs}}\label{target-vs-fbs}}
+
+\begin{center}\includegraphics{img/barplot.target.fbs-1} \end{center}
+
+\hypertarget{target-vs-exang}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{exang}}{target Vs exang}}\label{target-vs-exang}}
+
+\begin{center}\includegraphics{img/barplot.target.exang-1} \end{center}
+
+\hypertarget{target-vs-slope}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{slope}}{target Vs slope}}\label{target-vs-slope}}
+
+\begin{center}\includegraphics{img/barplot.target.slope-1} \end{center}
+
+\hypertarget{target-vs-ca}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{ca}}{target Vs ca}}\label{target-vs-ca}}
+
+\begin{center}\includegraphics{img/barplot.target.ca-1} \end{center}
+
+\hypertarget{target-vs-cp}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{cp}}{target Vs cp}}\label{target-vs-cp}}
+
+\begin{center}\includegraphics{img/barplot.target.cp-1} \end{center}
+
+\hypertarget{target-vs-restecg}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{restecg}}{target Vs restecg}}\label{target-vs-restecg}}
+
+\begin{center}\includegraphics{img/barplot.target.restecg-1} \end{center}
+
+\hypertarget{target-vs-thal}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{thal}}{target Vs thal}}\label{target-vs-thal}}
+
+\begin{center}\includegraphics{img/barplot.target.thal-1} \end{center}
+
+\hypertarget{target-vs-age}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{age}}{target Vs age}}\label{target-vs-age}}
+
+\hypertarget{section}{%
+\section{}\label{section}}
+
+\hypertarget{target-vs-age-1}{%
+\section{------------------------------------- Target Vs
+age}\label{target-vs-age-1}}
+
+target.age \textless{}- group.target \%\textgreater{}\%
+dplyr::count(age)
+target.age\(numeric <- as.numeric(as.character(target.age\)age))
+graph.target.geom.bar(target.age, `age', `Target Vs age', `Split
+Variables with Target', `age', `Count', `continuous', c(35, 80), c(0,
+20))
+
+```
+
+\hypertarget{target-vs-chol}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{chol}}{target Vs chol}}\label{target-vs-chol}}
+
+\begin{center}\includegraphics{img/barplot.target.chol-1} \end{center}
+
+\hypertarget{target-vs-oldpeak}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{oldpeak}}{target Vs oldpeak}}\label{target-vs-oldpeak}}
+
+\begin{center}\includegraphics{img/barplot.target.oldpeak-1} \end{center}
+
+\hypertarget{target-vs-trestbps}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{trestbps}}{target Vs trestbps}}\label{target-vs-trestbps}}
+
+\begin{center}\includegraphics{img/barplot.target.trestbps-1} \end{center}
+
+\hypertarget{target-vs-thalach}{%
+\subsection{\texorpdfstring{\texttt{target} Vs
+\texttt{thalach}}{target Vs thalach}}\label{target-vs-thalach}}
+
+\begin{center}\includegraphics{img/barplot.target.thalach-1} \end{center}
+
+
+\end{document}
