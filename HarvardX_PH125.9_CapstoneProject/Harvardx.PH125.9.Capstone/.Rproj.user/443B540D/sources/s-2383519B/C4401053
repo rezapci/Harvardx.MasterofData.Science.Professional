@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1565580493752.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1086565456",
+    "id" : "C4401053",
+    "lastKnownWriteTime" : 1565583589,
+    "last_content_update" : 1565583589395,
+    "path" : "C:/Users/Reza Hashemi/Downloads/HarvardX_DataScience_Professional/HarvardX_PH125.9_CapstoneProject/capstoneProject2/heartDiseaseUCIPredictionProject.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "596,1",
+        "scrollLine" : "572"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
