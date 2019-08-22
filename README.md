@@ -4,6 +4,8 @@
 
 ![#f03c15](https://placehold.it/15/f03c15/000000?## __HarvardX's Data Science Professional Certificate.__=+)`#f03c15`
 
+- ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) `#f03c15`
+
 • **Cover the fundamental R programming skills.**
 
 • **Explore statistical concepts such as probability, inference, and modeling and apply them in practice.**
