@@ -2,7 +2,7 @@
 | :- |-------------: | :-:
 | **Reza Hashemi**| **Harvardx.Master of Data Science Professional.**  | __On 21st of August at 2019 01:02 A.M.__
 
-`#f03c15`## __HarvardX's Data Science Professional Certificate.__
+![#f03c15](https://placehold.it/15/f03c15/000000?## __HarvardX's Data Science Professional Certificate.__`#f03c15`
 
 • **Cover the fundamental R programming skills.**
 
