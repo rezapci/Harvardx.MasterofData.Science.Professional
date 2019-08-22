@@ -2,7 +2,7 @@
 | :- |-------------: | :-:
 | Reza Hashemi| Harvardx.Master of Data Science Professional.  | On 12th of August at 2019 01:02 A.M.
 
-• **Cover the fundamental R programming skills.
+• **Cover the fundamental R programming skills.**
 
 • **Explore statistical concepts such as probability, inference, and modeling and apply them in practice.
 
