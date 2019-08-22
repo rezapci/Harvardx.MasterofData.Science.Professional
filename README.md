@@ -6,8 +6,12 @@
 ## ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) HarvardX's Data Science Professional Certificate.
 
 
-```diff
-• +**Cover the fundamental R programming skills.**
+<p style='color:red'>This is some red text.</p>
+<font color="red">This is some text!</font>
+These are <b style='color:red'>red words</b>.
+
+
+• **Cover the fundamental R programming skills.**
 
 • **Explore statistical concepts such as probability, inference, and modeling and apply them in practice.**
 
