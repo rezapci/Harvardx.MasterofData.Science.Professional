@@ -2,6 +2,8 @@
 | :- |-------------: | :-:
 | **Reza Hashemi**| **Harvardx.Master of Data Science Professional.**  | __On 21st of August at 2019 01:02 A.M.__
 
+##__HarvardX's Data Science Professional Certificate.__
+
 • **Cover the fundamental R programming skills.**
 
 • **Explore statistical concepts such as probability, inference, and modeling and apply them in practice.**
